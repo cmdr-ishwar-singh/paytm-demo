@@ -8,10 +8,12 @@ class PaymentsController < ApplicationController
   #WEB
   # post /proceed-to-pay
   def proceed_to_pay
-    
+
     # Test by switching between staging and production credentials.
     payment_environment = (params[:payment_environment] == "production" ? :production : :staging)
 
+    render json: payment_environment
+    return
 
     @param_list = Hash.new
     order_id = params["ORDER_ID"]
