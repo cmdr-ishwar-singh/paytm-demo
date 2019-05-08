@@ -34,6 +34,10 @@ class PaymentsController < ApplicationController
     @param_list["WEBSITE"] = Rails.application.secrets[:paytm_credentials][payment_environment][:web][:website]
     @param_list["CALLBACK_URL"] = Rails.application.secrets[:paytm_credentials][payment_environment][:web][:callback_url]
 
+
+    render json: @param_list
+    return
+
     puts "---#{@param_list}---"
     puts "---#{Rails.application.secrets[:paytm_credentials][payment_environment][:merchant_key]}---"
     @checksum_hash = new_pg_checksum(@param_list, Rails.application.secrets[:paytm_credentials][payment_environment][:merchant_key]).gsub("\n",'')
@@ -41,6 +45,9 @@ class PaymentsController < ApplicationController
     puts "param_list: #{@param_list}"
     puts "CHECKSUMHASH: #{@checksum_hash}"
     @payment_url = Rails.application.secrets[:paytm_credentials][payment_environment][:web][:payment_url]
+
+
+
   end
 
   # post /order-processed
