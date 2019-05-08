@@ -12,8 +12,7 @@ class PaymentsController < ApplicationController
     # Test by switching between staging and production credentials.
     payment_environment = (params[:payment_environment] == "production" ? :production : :staging)
 
-    render json: payment_environment
-    return
+
 
     @param_list = Hash.new
     order_id = params["ORDER_ID"]
@@ -24,7 +23,8 @@ class PaymentsController < ApplicationController
 
     @param_list["MID"] = Rails.application.secrets[:paytm_credentials][payment_environment][:mid]
 
-
+        render json: @param_list
+    return
 
     @param_list["ORDER_ID"] = order_id
     @param_list["CUST_ID"] = cust_id
