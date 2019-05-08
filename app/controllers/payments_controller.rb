@@ -23,7 +23,7 @@ class PaymentsController < ApplicationController
 
     @param_list["MID"] = Rails.application.secrets[:paytm_credentials][payment_environment][:mid]
 
-        render json: @param_list
+    render json: Rails.application.secrets[:paytm_credentials]
     return
 
     @param_list["ORDER_ID"] = order_id
