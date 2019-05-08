@@ -9,8 +9,7 @@ class PaymentsController < ApplicationController
   # post /proceed-to-pay
   def proceed_to_pay
     # Test by switching between staging and production credentials.
-
- 
+    
     @param_list = Hash.new
 
     @param_list["MID"] = ENV['mid']
