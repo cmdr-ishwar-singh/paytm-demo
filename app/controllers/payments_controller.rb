@@ -21,10 +21,12 @@ class PaymentsController < ApplicationController
     mobile_no = params["MOBILE_NO"]
     email = params["EMAIL"]
 
+        render json: Rails.application.secrets[:paytm_credentials]
+    return
+
     @param_list["MID"] = Rails.application.secrets[:paytm_credentials][payment_environment][:mid]
 
-    render json: Rails.application.secrets[:paytm_credentials]
-    return
+
 
     @param_list["ORDER_ID"] = order_id
     @param_list["CUST_ID"] = cust_id
