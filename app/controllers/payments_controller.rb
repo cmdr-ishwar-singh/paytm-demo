@@ -9,7 +9,7 @@ class PaymentsController < ApplicationController
   # post /proceed-to-pay
   def proceed_to_pay
 
-        render json: params
+    render json: params
     return
 
     # Test by switching between staging and production credentials.
