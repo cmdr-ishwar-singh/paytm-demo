@@ -21,11 +21,14 @@ class PaymentsController < ApplicationController
     @param_list["WEBSITE"] = ENV['website']
     @param_list["CALLBACK_URL"] = ENV['callback_url']
 
+
+    render json: @param_list
+    return
+
     @checksum_hash = new_pg_checksum(@param_list, ENV['merchant_key']).gsub("\n",'')
 
 
-    render json: @checksum_hash
-    return
+
 
     puts "param_list: #{@param_list}"
     puts "CHECKSUMHASH: #{@checksum_hash}"
