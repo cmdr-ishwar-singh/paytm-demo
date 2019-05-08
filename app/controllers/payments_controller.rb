@@ -8,8 +8,11 @@ class PaymentsController < ApplicationController
   #WEB
   # post /proceed-to-pay
   def proceed_to_pay
-
     # Test by switching between staging and production credentials.
+
+ 
+    @param_list = Hash.new
+
     @param_list["MID"] = ENV['mid']
     @param_list["ORDER_ID"] = params["ORDER_ID"]
     @param_list["CUST_ID"] = params["CUST_ID"]
@@ -20,15 +23,7 @@ class PaymentsController < ApplicationController
     @param_list["EMAIL"] = params["EMAIL"]
     @param_list["WEBSITE"] = ENV['website']
     @param_list["CALLBACK_URL"] = ENV['callback_url']
-
-
-    render json: @param_list
-    return
-
     @checksum_hash = new_pg_checksum(@param_list, ENV['merchant_key']).gsub("\n",'')
-
-
-
 
     puts "param_list: #{@param_list}"
     puts "CHECKSUMHASH: #{@checksum_hash}"
