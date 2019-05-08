@@ -2,7 +2,6 @@ require Rails.root.join("lib/paytm_helper.rb")
 
 class Api::Mobile::PaytmController < ActionController::Base
 
-  before_action :load_paytm_credentials
   include PaytmHelper::EncryptionNewPG
 
   # MOBILE
@@ -16,13 +15,13 @@ class Api::Mobile::PaytmController < ActionController::Base
 
     paytmHASH = Hash.new
 
-    paytmHASH["MID"] = @paytm_credentials[:mid]
+    paytmHASH["MID"] = ENV['mid']
     paytmHASH["ORDER_ID"] = params["ORDER_ID"]
     paytmHASH["CUST_ID"] = params["CUST_ID"]
-    paytmHASH["INDUSTRY_TYPE_ID"] = @paytm_credentials[:industry_type_id]
-    paytmHASH["CHANNEL_ID"] = @paytm_credentials[:web][:channel_id]
+    paytmHASH["INDUSTRY_TYPE_ID"] = ENV['industry_type_id']
+    paytmHASH["CHANNEL_ID"] = ENV['channel_id']
     paytmHASH["TXN_AMOUNT"] = params["TXN_AMOUNT"]
-    paytmHASH["WEBSITE"] = @paytm_credentials[:web][:website]
+    paytmHASH["WEBSITE"] = ENV['website']
 
     keys = params.keys
     keys.each do |key|
@@ -40,7 +39,7 @@ class Api::Mobile::PaytmController < ActionController::Base
 
     Rails.logger.debug "paytmHASH: #{paytmHASH}"
 
-    checksum_hash = PaytmHelper::ChecksumTool.new.get_checksum_hash(paytmHASH, @paytm_credentials[:merchant_key]).gsub("\n",'')
+    checksum_hash = PaytmHelper::ChecksumTool.new.get_checksum_hash(paytmHASH, ENV['merchant_key']).gsub("\n",'')
 
     # Prepare the return json.
     returnJson = Hash.new
@@ -55,7 +54,6 @@ class Api::Mobile::PaytmController < ActionController::Base
 
   # post verify-checksum
   def verify_checksum
-    payment_environment = (params[:payment_environment] == "production" ? :production : :staging)
     params_keys_to_ignore = ["USER_ID", "controller", "action", "format"]
 
     paytmHASH = Hash.new
@@ -68,20 +66,8 @@ class Api::Mobile::PaytmController < ActionController::Base
 
       paytmHASH[key] = params[key]
     end
-    paytmHASH = PaytmHelper::ChecksumTool.new.get_checksum_verified_array(paytmHASH, @paytm_credentials[:merchant_key])
+    paytmHASH = PaytmHelper::ChecksumTool.new.get_checksum_verified_array(paytmHASH, ENV['merchant_key'])
 
     @response_value = paytmHASH.to_json.to_s.html_safe
   end
-
-  private
-
-  def load_paytm_credentials
-    payment_environment = :staging
-    if params["payment_environment"].present? && (params["payment_environment"] == "production")
-      payment_environment = :production
-    end
-
-    @paytm_credentials = Rails.application.secrets.paytm_credentials[payment_environment]
-  end
-
 end
