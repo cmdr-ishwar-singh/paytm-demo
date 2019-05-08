@@ -9,6 +9,9 @@ class PaymentsController < ApplicationController
   # post /proceed-to-pay
   def proceed_to_pay
 
+        render json: params
+    return
+
     # Test by switching between staging and production credentials.
     payment_environment = (params[:payment_environment] == "production" ? :production : :staging)
 
@@ -35,8 +38,7 @@ class PaymentsController < ApplicationController
     @param_list["CALLBACK_URL"] = Rails.application.secrets[:paytm_credentials][payment_environment][:web][:callback_url]
 
 
-    render json: @param_list
-    return
+
 
     puts "---#{@param_list}---"
     puts "---#{Rails.application.secrets[:paytm_credentials][payment_environment][:merchant_key]}---"
